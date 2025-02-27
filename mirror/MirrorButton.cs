@@ -2,9 +2,11 @@
 
 /**
 *
+*   Updated February 27th 2025
+* 
 *   INSTRUCTIONS
 *
-*   1. Add this script as a component to your mirror toggle collider
+*   1. Add this script as a component to your mirror toggle buttons
 *   2. Reference the appropriate mirrorManager
 *   3. Within the unity inspector, select the appropriate mirror quality for the button (see switch statement below)
 *
