@@ -2,16 +2,16 @@
 
 /**
 *
-*   Updated February 27th 2025
+*   Updated March 4th 2025
 *
 *   INSTRUCTIONS
 *
-*   1. Create mirrors with 3 different qualities: High, Low and Transparent/PNG (See https://wiki.vrchat.com/wiki/Mirrors for VRC's mirror prefab)
-*   2. Create quads for each mirror button. Apply button PNG files to quads
-*       2a. Add colliders to button quads, or create separate colliders to act as triggers
-*   3. Create an empty mirror manager object and place next to your mirrors
-*   4. From within unity's inspector, add the following to the mirror manager:
-*       4a. References to all mirrors (High/Low/PNG)
+*   1. Create mirrors with 2 different qualities: High and Transparent (See https://wiki.vrchat.com/wiki/Mirrors for VRC's mirror prefab)
+*   2. Create quads for each mirror button. Apply button texture to quads as a material.
+*   3. Add collider component to each button, or create separate colliders to act as triggers
+*   4. Create an empty object to serve as the mirror manager. Place near your mirrors.
+*   4. Add this script to the mirror manager. The component will allow you to add the following:
+*       4a. References to all mirrors (High/PNG)
 *       4b. References to all quads where the buttons are rendered
 *       4c. References to the materials for the quads, so they can be swapped between active/inactive
 *   5. Add an audio source on the mirror manager object
@@ -31,19 +31,15 @@ public class MirrorToggleManager : UdonSharpBehaviour
 {
     [Header("Mirror Objects (GameObjects)")]
     public GameObject mirrorHigh;
-    public GameObject mirrorLow;
     public GameObject mirrorPNG;
     
     [Header("Button Renderers (Quads)")]
     public MeshRenderer buttonHigh;
-    public MeshRenderer buttonLow;
     public MeshRenderer buttonPNG;
     
     [Header("Button Materials")]
     public Material mirrorHighActiveMaterial;
     public Material mirrorHighInactiveMaterial;
-    public Material mirrorLowActiveMaterial;
-    public Material mirrorLowInactiveMaterial;
     public Material mirrorPNGActiveMaterial;
     public Material mirrorPNGInactiveMaterial;
     
@@ -56,7 +52,7 @@ public class MirrorToggleManager : UdonSharpBehaviour
     [Tooltip("Distance (in world units) at which the mirror will auto-turn off")]
     public float autoOffDistance = 10f;
     
-    // State: -1 = no mirror active, 0 = high, 1 = low, 2 = PNG/transparent.
+    // State: -1 = no mirror active, 0 = high, 1 = PNG/transparent.
     private int currentActive = -1;
     
 
@@ -66,16 +62,10 @@ public class MirrorToggleManager : UdonSharpBehaviour
         ToggleMirror(0);
     }
     
-    // Called when the Low-quality button is pressed
-    public void ToggleLow()
-    {
-        ToggleMirror(1);
-    }
-    
     // Called when the Transparent/PNG button is pressed.
     public void TogglePNG()
     {
-        ToggleMirror(2);
+        ToggleMirror(1);
     }
     
     // Toggles the mirror mode. If requested mode is active, mirror will turn off
@@ -109,21 +99,16 @@ public class MirrorToggleManager : UdonSharpBehaviour
     {
         // Only the active mirror will be enabled
         if (mirrorHigh != null) mirrorHigh.SetActive(currentActive == 0);
-        if (mirrorLow != null) mirrorLow.SetActive(currentActive == 1);
-        if (mirrorPNG != null) mirrorPNG.SetActive(currentActive == 2);
+        if (mirrorPNG != null) mirrorPNG.SetActive(currentActive == 1);
         
         // Update button materials.
         if (buttonHigh != null)
         {
             buttonHigh.material = (currentActive == 0) ? mirrorHighActiveMaterial : mirrorHighInactiveMaterial;
         }
-        if (buttonLow != null)
-        {
-            buttonLow.material = (currentActive == 1) ? mirrorLowActiveMaterial : mirrorLowInactiveMaterial;
-        }
         if (buttonPNG != null)
         {
-            buttonPNG.material = (currentActive == 2) ? mirrorPNGActiveMaterial : mirrorPNGInactiveMaterial;
+            buttonPNG.material = (currentActive == 1) ? mirrorPNGActiveMaterial : mirrorPNGInactiveMaterial;
         }
     }
     
